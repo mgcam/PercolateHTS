@@ -1,0 +1,24 @@
+PercolateHTS (Percolate High Throughput Sequencing)
+
+A collection of workflows and workflow components for processing
+high-throughput short-read DNA sequence data.
+
+We have a number of in-house Percolate workflows wrapping tools such
+as Picard, samtools, BWA, TopHat, Cufflinks and other software. In
+PercolateHTS I am aiming to collect out the components that do not
+rely on our in-house infrastructure.
+
+This is a work in progress. However, the master branch should always
+pass all of the tests.
+
+PercolateHTS dependencies are:
+
+- Percolate >= 0.6.0 (http://github.com/keithj/Percolate)
+
+
+PercolateHTS uses:
+
+- Picard (http://picard.sourceforge.net)
+- samtools (http://samtools.sourceforge.net)
+- BWA (http://bio-bwa.sourceforge.net)
+
