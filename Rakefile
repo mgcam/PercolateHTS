@@ -26,6 +26,7 @@ require 'rcov/rcovtask'
 spec = Gem::Specification.new do |spec|
   spec.name = 'percolate_hts'
   spec.version = '0.1.0'
+  spec.add_dependency('percolate', '>= 0.6.1')
   spec.extra_rdoc_files = []
   spec.summary = ''
   spec.description = ''
