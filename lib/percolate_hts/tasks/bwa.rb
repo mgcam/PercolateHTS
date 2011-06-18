@@ -17,11 +17,24 @@
 #
 
 module PercolateHTS::Tasks
-  
+
   def bwa_aln(query, reference, work_dir, args = {}, async = {})
     if query
       qname = File.basename(query, File.extname(query))
-      output = qname + '.sai'
+
+      # The args :b, -1 and -2 are used when the query is a BAM file.
+      # In this case, the first and last reads could be in the same query file.
+      # The following ensures that the respective output file names are distinct.
+      output = case
+                 when args[:b] && args['1']
+                   qname + '__1'
+                 when args[:b] && args['2']
+                   qname + '__2'
+                 else
+                   qname
+               end
+
+      output = output + '.sai'
 
       super(query, reference, output, work_dir, args, async)
     end
