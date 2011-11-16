@@ -20,6 +20,7 @@ module PercolateHTS::Workflows
 
   class PairedBWA < Percolate::Workflow
     include PercolateHTS::Tasks
+    include PercolateHTS::Utilities
 
     description <<-DESC
 This workflow maps a pair of files of reads to a reference using
@@ -79,24 +80,21 @@ Returns:
       async = args.delete(:async) || { :queue => :normal }
 
       if args_available?(reads1, reads2, reference, work_dir) && bwa_indexed?(reference)
-        fmt1 = File.extname(reads1)
-        fmt2 = File.extname(reads2)
-
-        unless fmt1 == fmt2
-          raise PercolateTaskError,
+        unless same_file_format?(reads1, reads2)
+          raise ArgumentError,
                 "Mismatched read files: " + [reads1, reads2].inspect
         end
 
         args1 = args2 = {}
-        case fmt1
-          when '.bam'
+        case
+          when bam_file?(reads1)
             args1 = {:b => true, '1' => true}.merge(args)
             args2 = {:b => true, '2' => true}.merge(args)
-          when '.fastq', '.fq'
+          when fastq_file?(reads1)
             args1 = args2 = args
           else
-            raise ArgumentError, "Unknown read format '#{fmt1}': " +
-                "expected one of '.bam', '.fastq' or '.fq'"
+            raise ArgumentError,
+                  "Unknown read format '#{reads1}'; expected one of BAM or Fastq."
         end
 
         # TODO: allow sampe args to be passed through

@@ -24,6 +24,8 @@ module PercolateHTS
   include Utilities
 end
 
+require 'percolate_hts/utilities'
+
 require 'percolate_hts/tasks'
 
 require 'percolate_hts/tasks/basic_bwa'

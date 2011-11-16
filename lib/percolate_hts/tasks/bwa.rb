@@ -17,12 +17,26 @@
 #
 
 module PercolateHTS::Tasks
-
+  # Runs bwa to align reads to a reference. This method provides a simplified
+  # interface to BWA by deriving the output SAI file name from the query
+  # file name.
+  #
+  # Arguments:
+  #
+  # - query (String): Reads file (Fastq or BAM).
+  # - reference (String): Fasta reference sequence file.
+  # - work_dir (String): Working directory.
+  # - args (Hash): Arguments to bwa, keys being symbols.
+  # - async (Hash): Arguments passed to the external batch queue system.
+  #
+  # Returns:
+  #
+  # - Alignment file (String).
   def bwa_aln(query, reference, work_dir, args = {}, async = {})
     if query
       qname = File.basename(query, File.extname(query))
 
-      # The args :b, -1 and -2 are used when the query is a BAM file.
+      # The args :b, 1 and 2 are used when the query is a BAM file.
       # In this case, the first and last reads could be in the same query file.
       # The following ensures that the respective output file names are distinct.
       output = case
@@ -49,6 +63,24 @@ module PercolateHTS::Tasks
     end
   end
 
+  # Runs bwa sampe on reads aligned to a reference. This method provides a
+  # simplified interface to BWA by deriving the output BAM file name from
+  # the reference and reads1 file names.
+  #
+  # Arguments:
+  #
+  # - aln1 (String): alignment file 1.
+  # - aln2 (String): alignment file 2.
+  # - reads1 (String): BAM or Fastq reads file 1.
+  # - reads2 (String): BAM or Fastq reads file 2
+  # - reference (String): Fasta reference sequence file.
+  # - work_dir (String): Working directory.
+  # - args (Hash): Arguments to bwa, keys being symbols.
+  # - async (Hash): Arguments passed to the external batch queue system.
+  #
+  # Returns:
+  #
+  # - Alignment file (String).
   def bwa_sampe(aln1, aln2, reads1, reads2, reference, work_dir, args = {}, async = {})
     if args_available?(reads1, reference)
       aname = File.basename(reference) + '.' + File.basename(reads1)
@@ -58,4 +90,3 @@ module PercolateHTS::Tasks
     end
   end
 end
-
